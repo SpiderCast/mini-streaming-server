@@ -1,0 +1,135 @@
+
+HTTPD ==> DVBD
+{
+    "opcode": "system info",
+    "my ip": "1.1.1.1"                      ## HTTPD IP
+}
+DVBD ==> HTTPD
+{
+    "opcode": "system info",
+    "my ip: "1.1.1.1",                      ## DVBD IP
+    "model name": "jIPBOX-0111",
+    "H/W ver": "jIP-20120801 rev.01",
+    "S/W ver": "jIP-20130222 rev.1",
+    "count": 2,
+    "FE list": [
+        {
+            "FE type": "DVB-S/S2",
+            "FE name": "DNBU10511IST"
+        },
+        {
+            "FE type": "DVB-S/S2",
+            "FE name": "DNBU10511IST"
+        }
+    ]
+}
+
+HTTPD ==> DVBD
+{
+    "opcode": "DVB-S list",
+    "my ip": "1.1.1.1"
+}
+DVBD ==> HTTPD
+{
+    "opcode": "DB ready"
+    "my ip": "1.1.1.1"
+    "answer": true (or false)               ## true:DB is ready, false:DB is broken or updating
+}
+SQL ==> HTTPD
+{
+    "opcode": "DVB-S list",
+    "my ip": "1.1.1.1",
+    "count": 4,                             ## sum of "DVB-S"
+    "DVB-S": [
+        {
+            "sat_id": 0,
+            ...
+        }
+    ]
+}
+
+HTTPD ==> DVBD
+{
+    "opcode": "DVB-S TP list",
+    "my ip": "1.1.1.1",
+    "sat_id": 1                             ## "dvbs" table's "sat_id" column
+}
+DVBD ==> HTTPD
+{
+    "opcode": "DB ready"
+    "my ip": "1.1.1.1"
+    "answer": true (or false)               ## true:DB is ready, false:DB is broken or updating
+}
+SQL ==> HTTPD
+{
+    "opcode": "DVB-S TP list",
+    "my ip": "1.1.1.1",
+    "count": 10,                            ## sum of "DVB-S TP"
+    "DVB-S TP": [
+        {
+            "rf_id": 1,
+            ...
+        }
+    ]
+}
+
+HTTPD ==> DVBD
+{
+    "opcode": "try lock",
+    "my ip": "1.1.1.1"
+    "RF id": 1                              ## "dvbs_tp" table's 'rf_id' column
+}
+DVBD ==> HTTPD
+{
+    "opcode": "try lock",
+    "my ip": "1.1.1.1"
+    "answer": true, (or false)              ## true:locked, false:unlocked
+    "level": 90,
+    "quality": 90
+}
+
+HTTPD ==> DVBD
+{
+    "opcode": "add DVBS",
+    "my ip": "1.1.1.1",
+    "DVBS": {
+        "sat_id": 0,
+        ...
+    }
+}
+DVBD ==> HTTPD
+{
+    "opcode": "add DVBS",
+    "my ip": "1.1.1.1",
+    "answer": true (or false),
+    "SAT id": 10
+}
+
+HTTPD ==> DVBD
+{
+    "opcode": "update DVBS",
+    "my ip": "1.1.1.1",
+    "DVBS": {
+        "sat_id": 1,
+        ...
+    }
+}
+DVBD ==> HTTPD
+{
+    "opcode": "update DVBS",
+    "my ip": "1.1.1.1",
+    "answer": true (or false)
+}
+
+HTTPD ==> DVBD
+{
+    "opcode": "delete DVBS",
+    "my ip": "1.1.1.1",
+    "SAT id": 1
+}
+DVBD ==> HTTPD
+{
+    "opcode": "delete DVBS",
+    "my ip": "1.1.1.1",
+    "answer": true (or false)
+}

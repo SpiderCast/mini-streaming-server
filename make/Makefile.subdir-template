@@ -1,0 +1,20 @@
+## -----------------------------------------------------------------------------
+## eoin@crenova.tv
+## -----------------------------------------------------------------------------
+
+include $(PROJECT_MAKE)/board_$(TARGET_BOARD).mk
+
+SUBDIRS :=
+
+DIR_INCS := $(PROJECT_BSP)/$(TARGET_BOARD)/inc $(SDK_INCS)
+DIR_CFLAGS := -DCHIP_STAPI $(SDK_CFLAGS)
+
+all: $(OBJS)
+    @$(BUILD_SUBDIRS)
+    @$(EXPORT_OBJS)
+
+clean:
+    @$(RM) $(OBJS)
+    @$(CLEAN_SUBDIRS)
+
+## EOF

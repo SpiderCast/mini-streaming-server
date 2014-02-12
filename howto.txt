@@ -1,0 +1,52 @@
+* setenv-common.sh
+  공통 환경 설정 - 건드릴 필요 없음
+* setenv-ip0000.sh
+  ST7105 - twin보드 에 적용
+* setenv-ip0001.sh
+  ODROID-X2
+* setenv-ip0002.sh
+  PC-ubuntu 12.04에서 확인
+
+* 디렉토리별 설명
+  --+-- export      : 첫번째. 컴파일 후 생성된 모듈별 라이브러리 집합소
+    |                 두번째. target의 /usr 밑에 들어갈 .so 및 실행파일들 집합소
+    +-- ipbox       : 작업 코드
+    |     +-- ext   : 외부 라이브러리. make_ext.sh 에 의해 따로 컴파일 됨
+    |     +-- inc   : 전역 헤더 파일
+    |     +-- stb   : frontend 별 동작 관련 모듈 (ex. DVB, ATSC)
+    |     +-- svc   : 서비스 모듈 (ex. 통신 모듈)
+    |     +-- sys   : 시스템 공통 모듈 (ex. 로깅, 메세지큐)
+    |     +-- util  : 독립모듈 (ex. cgi)
+    +-- make        : 공통 makefile과 보드 별 makefile
+    +-- sdk         : target 시스템별 커널, 파일시스템, 롬이미지 생성 등등
+
+* ubuntu 12.04 LTS 에서 실행 방법
+
+  $ . setenv-ip0002.sh          : PC환경 설정
+  $ . make_ext.sh build         : ext. 라이브러리 컴파일 (이게 선행되어야 함)
+  $ make util                   : 독립모듈(현재는 cgi) 컴파일
+  $ make all                    : ...
+
+  sdk/pc/target 디렉토리의 내용을 그대로 PC로 옮김
+
+  /etc/mini_httpd.conf
+  /usr/local/*
+  /var/www/cgi-bin
+  /var/www/log
+
+  디렉토리가 없으면 알아서 만들어주면 됨
+
+  실행방법은 아래와 같음
+
+  $ sudo mini_httpd -C /etc/mini_httpd.conf
+  $ ./ipbox.out
+
+* 웹브라우저를 통한 테스트
+
+  브라우저 URL에 아래와 같이 입력 (최초 한번은 반드시 에러가 남. 왜 그런지는 파악되지 않았음)
+
+  http://host_pc_ipaddr/cgi-bin/index.cgi?opcode=system info [enter]
+  http://host_pc_ipaddr/cgi-bin/index.cgi?opcode=DVBS list [enter]
+  http://host_pc_ipaddr/cgi-bin/index.cgi?opcode=DVBS TP list&sat_id=0 [enter]
+
+  기타 필요한 URL은 ix_jsonop.h 를 참조
